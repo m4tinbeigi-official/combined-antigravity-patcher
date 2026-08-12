@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combined Antigravity Patcher - پچ ترکیبی آنتی‌گرویتی</title>
+    <meta name="description" content="یک اسکریپت ساده و همه‌کاره برای رفع مشکل ورود (Authorization) و دور زدن محدودیت‌های جغرافیایی در Google Antigravity برای ویندوز و مک.">
+    <!-- Google Fonts: Inter & Outfit & Vazirmatn for Persian text support -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Vazirmatn:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(17, 24, 39, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --primary-glow: #8b5cf6;
+            --secondary-glow: #3b82f6;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --success-color: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Vazirmatn', 'Outfit', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Subtle glowing background lights */
+        .glow-bg {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(0,0,0,0) 70%);
+            top: -200px;
+            left: -200px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .glow-bg-2 {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, rgba(0,0,0,0) 70%);
+            bottom: -100px;
+            right: -100px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Container & Navigation */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #a78bfa, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .github-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-main);
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.5rem 1.2rem;
+            border-radius: 9999px;
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .github-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            padding: 5rem 0;
+        }
+
+        @media (max-width: 968px) {
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+                text-align: center;
+            }
+            .hero-buttons {
+                justify-content: center;
+            }
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem 2rem;
+            border-radius: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-glow), #7c3aed);
+            color: white;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 24px rgba(139, 92, 246, 0.5);
+            transform: translateY(-3px);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        /* Hero Image Container */
+        .hero-media {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-media img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .section-desc {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem;
+            backdrop-filter: blur(12px);
+        }
+
+        .feature-card:hover {
+            border-color: rgba(139, 92, 246, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.05);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--primary-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* Quick Install / Code Section */
+        .installation {
+            padding: 5rem 0;
+            border-top: 1px solid var(--border-color);
+            background: radial-gradient(ellipse at center, rgba(17, 24, 39, 0.3) 0%, rgba(11, 15, 25, 0) 100%);
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 0.6rem 1.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        .tab-btn.active {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: var(--primary-glow);
+            color: var(--text-main);
+        }
+
+        .code-panel {
+            display: none;
+            background: #07090e;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .code-panel.active {
+            display: block;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 0.8rem;
+        }
+
+        .code-lang {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-family: 'Outfit', monospace;
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        pre {
+            font-family: 'Outfit', monospace;
+            overflow-x: auto;
+            color: #e5e7eb;
+            font-size: 0.95rem;
+        }
+
+        /* Attribution / Credits */
+        .credits {
+            padding: 5rem 0;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .credits-container {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            margin-top: 2.5rem;
+        }
+
+        .credit-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem 2.5rem;
+            min-width: 250px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .credit-item:hover {
+            border-color: var(--secondary-glow);
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .credit-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .credit-desc {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glow-bg"></div>
+    <div class="glow-bg-2"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo">Combined AP</div>
+            <a href="https://github.com/kakajan/antigravity-patch" class="github-link" target="_blank">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                سورس گیت‌هاب
+            </a>
+        </header>
+
+        <section class="hero">
+            <div>
+                <h1 class="hero-title">پچ ترکیبی<br>آنتی‌گرویتی</h1>
+                <p class="hero-subtitle">ترکیب دو ابزار فوق‌العاده در قالب یک اسکریپت ساده برای دور زدن محدودیت‌های منطقه‌ای و رفع مشکل ورود و احراز هویت در محیط‌های تحت پروکسی.</p>
+                <div class="hero-buttons">
+                    <a href="#install" class="btn btn-primary">راهنمای نصب سریع</a>
+                    <a href="https://github.com/kakajan/antigravity-patch" class="btn btn-secondary" target="_blank">پروژه اصلی ۱</a>
+                    <a href="https://github.com/AvenCores/open-antigravity-patcher" class="btn btn-secondary" target="_blank">پروژه اصلی ۲</a>
+                </div>
+            </div>
+            <div class="hero-media">
+                <img src="hero.jpg" alt="Combined Antigravity Patcher Preview">
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="section-header">
+                <h2 class="section-title">ویژگی‌های پچ ترکیبی</h2>
+                <p class="section-desc">با این اسکریپت، نیازی به نصب جداگانه و پیچیدهٔ ابزارها ندارید. همه چیز خودکار انجام می‌شود.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>رفع مشکل احراز هویت</h3>
+                    <p>با پیاده‌سازی پچ kakajan، مشکل عدم اتصال و خطای پروکسی در زمان احراز هویت به طور کامل رفع می‌شود.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <h3>حذف محدودیت جغرافیایی</h3>
+                    <p>پچ AvenCores به صورت محلی بررسی‌های موقعیت مکانی و قفل‌های منطقه‌ای را غیرفعال کرده و برنامه را باز می‌کند.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>پشتیبان‌گیری خودکار</h3>
+                    <p>اسکریپت قبل از اعمال هر تغییری، از فایل‌های مهم کپی پشتیبان تهیه می‌کند تا بتوانید به راحتی وضعیت را بازیابی کنید.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="installation" id="install">
+            <div class="section-header">
+                <h2 class="section-title">راهنمای نصب و اجرا</h2>
+                <p class="section-desc">سیستم‌عامل خود را انتخاب کرده و دستور زیر را در ترمینال یا پاورشل با دسترسی ادمین اجرا کنید.</p>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('mac')">macOS (مک)</button>
+                <button class="tab-btn" onclick="switchTab('win')">Windows (ویندوز)</button>
+            </div>
+
+            <!-- macOS Code -->
+            <div id="code-mac" class="code-panel active">
+                <div class="code-header">
+                    <span class="code-lang">macOS PowerShell (pwsh)</span>
+                    <button class="copy-btn" onclick="copyCode('code-mac-text')">کپی دستور</button>
+                </div>
+                <pre id="code-mac-text"># کلون کردن و اجرای اسکریپت نصب در مک
+git clone https://github.com/kakajan/antigravity-patch.git
+cd antigravity-patch
+pwsh ./install-antigravity-patch.ps1</pre>
+            </div>
+
+            <!-- Windows Code -->
+            <div id="code-win" class="code-panel">
+                <div class="code-header">
+                    <span class="code-lang">Windows PowerShell (Admin)</span>
+                    <button class="copy-btn" onclick="copyCode('code-win-text')">کپی دستور</button>
+                </div>
+                <pre id="code-win-text"># اجرای اسکریپت نصب در ویندوز (ابتدا پاورشل را در حالت ادمین باز کنید)
+Set-ExecutionPolicy Bypass -Scope Process -Force
+pwsh ./install-antigravity-patch-windows.ps1</pre>
+            </div>
+        </section>
+
+        <section class="credits">
+            <h2 class="section-title">پروژه‌های مرجع و ایده اصلی</h2>
+            <p class="section-desc">این پروژه به طور مستقیم بر پایه تلاش‌ها و نوآوری‌های دو پروژه زیر توسعه داده شده است:</p>
+            <div class="credits-container">
+                <a href="https://github.com/kakajan/antigravity-patch" class="credit-item" target="_blank">
+                    <div class="credit-name">antigravity-patch</div>
+                    <div class="credit-desc">طراحی شده توسط kakajan برای رفع مشکل لاگین</div>
+                </a>
+                <a href="https://github.com/AvenCores/open-antigravity-patcher" class="credit-item" target="_blank">
+                    <div class="credit-name">open-antigravity-patcher</div>
+                    <div class="credit-desc">طراحی شده توسط AvenCores برای بایپس منطقه‌ای</div>
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <p>تمامی حقوق و کدهای اصلی متعلق به توسعه‌دهندگان پروژه‌های مرجع می‌باشد.</p>
+        </footer>
+    </div>
+
+    <script>
+        function switchTab(os) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.code-panel').forEach(panel => panel.classList.remove('active'));
+            
+            if (os === 'mac') {
+                event.target.classList.add('active');
+                document.getElementById('code-mac').classList.add('active');
+            } else {
+                event.target.classList.add('active');
+                document.getElementById('code-win').classList.add('active');
+            }
+        }
+
+        function copyCode(id) {
+            const codeText = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(codeText).then(() => {
+                const btn = event.target;
+                const originalText = btn.innerText;
+                btn.innerText = 'کپی شد!';
+                btn.style.background = 'var(--success-color)';
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.background = 'rgba(255, 255, 255, 0.05)';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
