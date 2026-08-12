@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Combined Antigravity Patcher - پچ ترکیبی آنتی‌گرویتی</title>
-    <meta name="description" content="یک اسکریپت ساده و همه‌کاره برای رفع مشکل ورود (Authorization) و دور زدن محدودیت‌های جغرافیایی در Google Antigravity برای ویندوز و مک.">
-    <!-- Google Fonts: Inter & Outfit & Vazirmatn for Persian text support -->
+    <title>Combined Antigravity Patcher</title>
+    <meta name="description" content="A single script to fix proxy authorization and bypass regional restrictions for Google Antigravity on Windows & macOS. Supports restricted regions like Russia, Iran, Syria, and Cuba.">
+    <!-- Google Fonts: Inter, Outfit, Vazirmatn (for Persian/Arabic), and Roboto (for Russian) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Vazirmatn:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Vazirmatn:wght@300;400;700;900&family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -26,18 +26,18 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: background-color 0.3s, border-color 0.3s, transform 0.3s;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            font-family: 'Vazirmatn', 'Outfit', sans-serif;
+            font-family: 'Outfit', 'Vazirmatn', 'Roboto', sans-serif;
             overflow-x: hidden;
             line-height: 1.6;
         }
 
-        /* Subtle glowing background lights */
+        /* Glowing background lights */
         .glow-bg {
             position: absolute;
             width: 600px;
@@ -85,6 +85,30 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: -0.5px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Language Switcher */
+        .lang-select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .lang-select option {
+            background-color: #0f172a;
+            color: var(--text-main);
         }
 
         .github-link {
@@ -401,6 +425,19 @@
             color: var(--text-muted);
             font-size: 0.9rem;
         }
+
+        /* Alignments for RTL */
+        body[dir="rtl"] {
+            text-align: right;
+        }
+
+        body[dir="rtl"] .github-link {
+            flex-direction: row-reverse;
+        }
+        
+        body[dir="rtl"] .code-panel {
+            text-align: left; /* Keep code panel left aligned */
+        }
     </style>
 </head>
 <body>
@@ -411,22 +448,30 @@
     <div class="container">
         <header>
             <div class="logo">Combined AP</div>
-            <a href="https://github.com/kakajan/antigravity-patch" class="github-link" target="_blank">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                </svg>
-                سورس گیت‌هاب
-            </a>
+            <div class="nav-actions">
+                <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
+                    <option value="en">English</option>
+                    <option value="fa">فارسی</option>
+                    <option value="ar">العربية</option>
+                    <option value="ru">Русский</option>
+                </select>
+                <a href="https://github.com/m4tinbeigi-official/combined-antigravity-patcher" class="github-link" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    <span id="gitText">GitHub</span>
+                </a>
+            </div>
         </header>
 
         <section class="hero">
             <div>
-                <h1 class="hero-title">پچ ترکیبی<br>آنتی‌گرویتی</h1>
-                <p class="hero-subtitle">ترکیب دو ابزار فوق‌العاده در قالب یک اسکریپت ساده برای دور زدن محدودیت‌های منطقه‌ای و رفع مشکل ورود و احراز هویت در محیط‌های تحت پروکسی.</p>
+                <h1 class="hero-title" id="heroTitle">Combined<br>Antigravity Patcher</h1>
+                <p class="hero-subtitle" id="heroSubtitle">One script. Two fixes. Zero hassle. Resolve proxy authorization and bypass regional locks for Google Antigravity on macOS & Windows.</p>
                 <div class="hero-buttons">
-                    <a href="#install" class="btn btn-primary">راهنمای نصب سریع</a>
-                    <a href="https://github.com/kakajan/antigravity-patch" class="btn btn-secondary" target="_blank">پروژه اصلی ۱</a>
-                    <a href="https://github.com/AvenCores/open-antigravity-patcher" class="btn btn-secondary" target="_blank">پروژه اصلی ۲</a>
+                    <a href="#install" class="btn btn-primary" id="btnInstall">Quick Install</a>
+                    <a href="https://github.com/kakajan/antigravity-patch" class="btn btn-secondary" target="_blank" id="btnRef1">kakajan Patcher</a>
+                    <a href="https://github.com/AvenCores/open-antigravity-patcher" class="btn btn-secondary" target="_blank" id="btnRef2">AvenCores Patcher</a>
                 </div>
             </div>
             <div class="hero-media">
@@ -436,56 +481,56 @@
 
         <section class="features">
             <div class="section-header">
-                <h2 class="section-title">ویژگی‌های پچ ترکیبی</h2>
-                <p class="section-desc">با این اسکریپت، نیازی به نصب جداگانه و پیچیدهٔ ابزارها ندارید. همه چیز خودکار انجام می‌شود.</p>
+                <h2 class="section-title" id="featuresTitle">Combined Features</h2>
+                <p class="section-desc" id="featuresDesc">No need to run multiple command blocks. Both community fixes are handled dynamically.</p>
             </div>
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">🛡️</div>
-                    <h3>رفع مشکل احراز هویت</h3>
-                    <p>با پیاده‌سازی پچ kakajan، مشکل عدم اتصال و خطای پروکسی در زمان احراز هویت به طور کامل رفع می‌شود.</p>
+                    <h3 id="feat1Title">Proxy Authorization Fix</h3>
+                    <p id="feat1Desc">Applies the custom version.dll to properly route authentication requests through corporate or custom proxies without intercepting data.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🌍</div>
-                    <h3>حذف محدودیت جغرافیایی</h3>
-                    <p>پچ AvenCores به صورت محلی بررسی‌های موقعیت مکانی و قفل‌های منطقه‌ای را غیرفعال کرده و برنامه را باز می‌کند.</p>
+                    <h3 id="feat2Title">Region Bypass</h3>
+                    <p id="feat2Desc">Specifically bypasses regional restrictions and blocks affecting users in regions like Russia, Iran, Syria, Sudan, or Cuba.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">⚡</div>
-                    <h3>پشتیبان‌گیری خودکار</h3>
-                    <p>اسکریپت قبل از اعمال هر تغییری، از فایل‌های مهم کپی پشتیبان تهیه می‌کند تا بتوانید به راحتی وضعیت را بازیابی کنید.</p>
+                    <h3 id="feat3Title">Automatic Backups</h3>
+                    <p id="feat3Desc">Safely copies your original binaries to a local backup directory before any edits, allowing full recovery anytime.</p>
                 </div>
             </div>
         </section>
 
         <section class="installation" id="install">
             <div class="section-header">
-                <h2 class="section-title">راهنمای نصب و اجرا</h2>
-                <p class="section-desc">سیستم‌عامل خود را انتخاب کرده و دستور زیر را در ترمینال یا پاورشل با دسترسی ادمین اجرا کنید.</p>
+                <h2 class="section-title" id="installTitle">Installation Guide</h2>
+                <p class="section-desc" id="installDesc">Select your operating system and execute the commands below in your Terminal or PowerShell (Admin).</p>
             </div>
 
             <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('mac')">macOS (مک)</button>
-                <button class="tab-btn" onclick="switchTab('win')">Windows (ویندوز)</button>
+                <button class="tab-btn active" id="tabMac" onclick="switchTab('mac')">macOS</button>
+                <button class="tab-btn" id="tabWin" onclick="switchTab('win')">Windows</button>
             </div>
 
             <!-- macOS Code -->
             <div id="code-mac" class="code-panel active">
                 <div class="code-header">
                     <span class="code-lang">macOS PowerShell (pwsh)</span>
-                    <button class="copy-btn" onclick="copyCode('code-mac-text')">کپی دستور</button>
+                    <button class="copy-btn" id="copyBtnMac" onclick="copyCode('code-mac-text')">Copy</button>
                 </div>
-                <pre id="code-mac-text"># کلون کردن ریپازیتوری پچ ترکیبی
+                <pre id="code-mac-text"># Clone repository
 git clone https://github.com/m4tinbeigi-official/combined-antigravity-patcher.git
 cd combined-antigravity-patcher
 
-# ۱. اجرای کامل (هر دو پچ ورود و ریجن):
+# Option 1: Apply BOTH patches (Auth & Region)
 pwsh ./install-antigravity-patch.ps1
 
-# ۲. اجرای اختصاصی پچ ریجن (فقط رفع محدودیت جغرافیایی):
+# Option 2: Apply ONLY the region bypass (for regional restrictions)
 pwsh ./install-antigravity-patch.ps1 -RegionOnly
 
-# ۳. اجرای اختصاصی پچ ورود (فقط رفع خطای Authorization):
+# Option 3: Apply ONLY the authorization/proxy fix
 pwsh ./install-antigravity-patch.ps1 -AuthOnly</pre>
             </div>
 
@@ -493,64 +538,203 @@ pwsh ./install-antigravity-patch.ps1 -AuthOnly</pre>
             <div id="code-win" class="code-panel">
                 <div class="code-header">
                     <span class="code-lang">Windows PowerShell (Admin)</span>
-                    <button class="copy-btn" onclick="copyCode('code-win-text')">کپی دستور</button>
+                    <button class="copy-btn" id="copyBtnWin" onclick="copyCode('code-win-text')">Copy</button>
                 </div>
-                <pre id="code-win-text"># ابتدا پاورشل را در حالت ادمین (Run as Administrator) باز کرده و دستورات زیر را اجرا کنید:
+                <pre id="code-win-text"># Open PowerShell as Administrator, then run:
 git clone https://github.com/m4tinbeigi-official/combined-antigravity-patcher.git
 cd combined-antigravity-patcher
 Set-ExecutionPolicy Bypass -Scope Process -Force
 
-# ۱. اجرای کامل (هر دو پچ ورود و ریجن):
+# Option 1: Apply BOTH patches (Auth & Region)
 pwsh ./install-antigravity-patch-windows.ps1
 
-# ۲. اجرای اختصاصی پچ ریجن (فقط رفع محدودیت جغرافیایی):
+# Option 2: Apply ONLY the region bypass (for regional restrictions)
 pwsh ./install-antigravity-patch-windows.ps1 -RegionOnly
 
-# ۳. اجرای اختصاصی پچ ورود (فقط رفع خطای Authorization):
+# Option 3: Apply ONLY the authorization/proxy fix
 pwsh ./install-antigravity-patch-windows.ps1 -AuthOnly</pre>
             </div>
         </section>
 
         <section class="credits">
-            <h2 class="section-title">پروژه‌های مرجع و ایده اصلی</h2>
-            <p class="section-desc">این پروژه به طور مستقیم بر پایه تلاش‌ها و نوآوری‌های دو پروژه زیر توسعه داده شده است:</p>
+            <h2 class="section-title" id="creditsTitle">Credits & Original Work</h2>
+            <p class="section-desc" id="creditsDesc">This script is built upon the amazing research and releases of the following community repositories:</p>
             <div class="credits-container">
                 <a href="https://github.com/kakajan/antigravity-patch" class="credit-item" target="_blank">
                     <div class="credit-name">antigravity-patch</div>
-                    <div class="credit-desc">طراحی شده توسط kakajan برای رفع مشکل لاگین</div>
+                    <div class="credit-desc" id="credit1Desc">Created by kakajan for proxy auth fixes</div>
                 </a>
                 <a href="https://github.com/AvenCores/open-antigravity-patcher" class="credit-item" target="_blank">
                     <div class="credit-name">open-antigravity-patcher</div>
-                    <div class="credit-desc">طراحی شده توسط AvenCores برای بایپس منطقه‌ای</div>
+                    <div class="credit-desc" id="credit2Desc">Created by AvenCores for regional bypasses</div>
                 </a>
             </div>
         </section>
 
         <footer>
-            <p>تمامی حقوق و کدهای اصلی متعلق به توسعه‌دهندگان پروژه‌های مرجع می‌باشد.</p>
+            <p id="footerText">All copyrights to original binary patches belong to their respective creators.</p>
         </footer>
     </div>
 
     <script>
+        const translations = {
+            en: {
+                dir: 'ltr',
+                title: 'Combined Antigravity Patcher',
+                subtitle: 'One script. Two fixes. Zero hassle. Resolve proxy authorization and bypass regional locks for Google Antigravity on macOS & Windows.',
+                btnInstall: 'Quick Install',
+                featuresTitle: 'Combined Features',
+                featuresDesc: 'No need to run multiple command blocks. Both community fixes are handled dynamically.',
+                feat1Title: 'Proxy Authorization Fix',
+                feat1Desc: 'Applies the custom version.dll to properly route authentication requests through corporate or custom proxies without intercepting data.',
+                feat2Title: 'Region Bypass',
+                feat2Desc: 'Specifically bypasses regional restrictions and blocks affecting users in regions like Russia, Iran, Syria, Sudan, or Cuba.',
+                feat3Title: 'Automatic Backups',
+                feat3Desc: 'Safely copies your original binaries to a local backup directory before any edits, allowing full recovery anytime.',
+                installTitle: 'Installation Guide',
+                installDesc: 'Select your operating system and execute the commands below in your Terminal or PowerShell (Admin).',
+                creditsTitle: 'Credits & Original Work',
+                creditsDesc: 'This script is built upon the amazing research and releases of the following community repositories:',
+                credit1Desc: 'Created by kakajan for proxy auth fixes',
+                credit2Desc: 'Created by AvenCores for regional bypasses',
+                footerText: 'All copyrights to original binary patches belong to their respective creators.',
+                copy: 'Copy',
+                copied: 'Copied!',
+                gitText: 'GitHub Source'
+            },
+            fa: {
+                dir: 'rtl',
+                title: 'پچ ترکیبی آنتی‌گرویتی',
+                subtitle: 'یک اسکریپت ساده برای رفع خطای ورود (Authorization) پشت پروکسی و حذف محدودیت‌های جغرافیایی گوگل در ویندوز و مک.',
+                btnInstall: 'راهنمای نصب سریع',
+                featuresTitle: 'ویژگی‌های پچ ترکیبی',
+                featuresDesc: 'نیازی به نصب جداگانه و پیچیده ابزارها نیست. هر دو رفع اشکال به صورت همزمان انجام می‌شوند.',
+                feat1Title: 'رفع مشکل لاگین و پروکسی',
+                feat1Desc: 'قرار دادن فایل version.dll جهت هدایت صحیح ترافیک احراز هویت از میان فایروال یا پروکسی‌های سازمانی.',
+                feat2Title: 'بایپس قفل‌های منطقه‌ای',
+                feat2Desc: 'دور زدن تحریم‌ها و محدودیت‌های جغرافیایی گوگل برای کاربران کشورهای ایران، روسیه، سوریه، سودان و کوبا.',
+                feat3Title: 'بکاپ‌گیری خودکار',
+                feat3Desc: 'پشتیبان‌گیری خودکار از فایل‌های باینری اصلی در مسیر سیستم شما قبل از اعمال هرگونه تغییر.',
+                installTitle: 'راهنمای نصب و اجرا',
+                installDesc: 'سیستم‌عامل خود را انتخاب کرده و دستور زیر را در ترمینال یا پاورشل (ادمین) اجرا کنید.',
+                creditsTitle: 'اعتبارات و منابع الهام',
+                creditsDesc: 'این اسکریپت بر پایه تلاش‌ها و نوآوری‌های باینری دو پروژه متن‌باز زیر طراحی شده است:',
+                credit1Desc: 'توسعه یافته توسط kakajan جهت حل مشکلات پروکسی ورود',
+                credit2Desc: 'توسعه یافته توسط AvenCores جهت حل تحریم‌های منطقه‌ای',
+                footerText: 'تمامی حقوق متعلق به نویسندگان اصلی پروژه‌های پچ می‌باشد.',
+                copy: 'کپی دستور',
+                copied: 'کپی شد!',
+                gitText: 'سورس گیت‌هاب'
+            },
+            ar: {
+                dir: 'rtl',
+                title: 'رقعة أنتي غرافيتي المشتركة',
+                subtitle: 'أداة موحدة لحل مشاكل تسجيل الدخول والوكيل (Proxy) وتجاوز الحظر الجغرافي المفروض على Google Antigravity لنظامي التشغيل Windows و macOS.',
+                btnInstall: 'دليل التثبيت السريع',
+                featuresTitle: 'الميزات المدمجة',
+                featuresDesc: 'لا داعي لتثبيت الأدوات بشكل منفصل. يتم تطبيق كلا الحلين تلقائيًا وبأمان.',
+                feat1Title: 'إصلاح مصادقة الوكيل',
+                feat1Desc: 'تطبيق ملف version.dll لإرسال حركة مرور المصادقة بشكل صحيح عبر شبكات بروكسي دون اعتراض البيانات.',
+                feat2Title: 'تخطي القيود الإقليمية',
+                feat2Desc: 'تجاوز قيود وحظر خدمات جوجل في الدول الخاضعة للقيود مثل سوريا، روسيا، إيران، السودان، وكوبا.',
+                feat3Title: 'نسخ احتياطي تلقائي',
+                feat3Desc: 'أخذ نسخ احتياطية للملفات الأصلية في مجلد محلي آمن تلقائياً قبل أي تعديل لتسهيل استعادتها.',
+                installTitle: 'دليل التثبيت والتشغيل',
+                installDesc: 'اختر نظام التشغيل الخاص بك وقم بتشغيل الأوامر أدناه في الطرفية أو نافذة PowerShell (كـ مسؤول).',
+                creditsTitle: 'الحقوق والمراجع المرجعية',
+                creditsDesc: 'هذا السكربت يعتمد بشكل كامل على أبحاث وإصدارات المطورين في المشاريع مفتوحة المصدر التالية:',
+                credit1Desc: 'تم تطويره بواسطة kakajan لإصلاح مشاكل الاتصال والوكيل',
+                credit2Desc: 'تم تطويره بواسطة AvenCores لتجاوز القيود الإقليمية المفروضة',
+                footerText: 'جميع الحقوق والأعمال البرمجية الأصلية تعود لمطوريها الأصليين.',
+                copy: 'نسخ الأمر',
+                copied: 'تم النسخ!',
+                gitText: 'مصدر جيت هاب'
+            },
+            ru: {
+                dir: 'ltr',
+                title: 'Combined Antigravity Patcher',
+                subtitle: 'Единый скрипт для решения проблем с авторизацией через прокси и обхода региональных ограничений Google Antigravity на macOS и Windows.',
+                btnInstall: 'Быстрая установка',
+                featuresTitle: 'Возможности патчера',
+                featuresDesc: 'Нет необходимости запускать несколько скриптов. Оба сообщества исправлений применяются динамически.',
+                feat1Title: 'Исправление авторизации прокси',
+                feat1Desc: 'Копирует файл version.dll для правильной маршрутизации запросов авторизации через корпоративные или кастомные прокси.',
+                feat2Title: 'Обход региональных блокировок',
+                feat2Desc: 'Специально обходит географические ограничения для пользователей в таких регионах, как Россия, Иран, Сирия, Судан и Куба.',
+                feat3Title: 'Автоматическое резервное копирование',
+                feat3Desc: 'Создает копии оригинальных файлов перед модификацией, что гарантирует возможность быстрого отката.',
+                installTitle: 'Инструкция по установке',
+                installDesc: 'Выберите вашу операционную систему и запустите команды ниже в Терминале или PowerShell (от имени администратора).',
+                creditsTitle: 'Благодарности авторам',
+                creditsDesc: 'Этот проект построен на базе замечательных исследований следующих открытых репозиториев:',
+                credit1Desc: 'Создано разработчиком kakajan для исправления авторизации',
+                credit2Desc: 'Создано разработчиком AvenCores для обхода региональных ограничений',
+                footerText: 'Все авторские права на бинарные патчи принадлежат их первоначальным разработчикам.',
+                copy: 'Копировать',
+                copied: 'Скопировано!',
+                gitText: 'Исходный код GitHub'
+            }
+        };
+
+        function changeLanguage(lang) {
+            const translation = translations[lang] || translations.en;
+            
+            // Set document direction and lang attribute
+            document.documentElement.setAttribute('dir', translation.dir);
+            document.documentElement.setAttribute('lang', lang);
+            document.body.setAttribute('dir', translation.dir);
+
+            // Update text contents
+            document.getElementById('heroTitle').innerHTML = translation.title.replace(' ', '<br>');
+            document.getElementById('heroSubtitle').innerText = translation.subtitle;
+            document.getElementById('btnInstall').innerText = translation.btnInstall;
+            
+            document.getElementById('featuresTitle').innerText = translation.featuresTitle;
+            document.getElementById('featuresDesc').innerText = translation.featuresDesc;
+            
+            document.getElementById('feat1Title').innerText = translation.feat1Title;
+            document.getElementById('feat1Desc').innerText = translation.feat1Desc;
+            document.getElementById('feat2Title').innerText = translation.feat2Title;
+            document.getElementById('feat2Desc').innerText = translation.feat2Desc;
+            document.getElementById('feat3Title').innerText = translation.feat3Title;
+            document.getElementById('feat3Desc').innerText = translation.feat3Desc;
+            
+            document.getElementById('installTitle').innerText = translation.installTitle;
+            document.getElementById('installDesc').innerText = translation.installDesc;
+            
+            document.getElementById('creditsTitle').innerText = translation.creditsTitle;
+            document.getElementById('creditsDesc').innerText = translation.creditsDesc;
+            document.getElementById('credit1Desc').innerText = translation.credit1Desc;
+            document.getElementById('credit2Desc').innerText = translation.credit2Desc;
+            
+            document.getElementById('footerText').innerText = translation.footerText;
+            document.getElementById('copyBtnMac').innerText = translation.copy;
+            document.getElementById('copyBtnWin').innerText = translation.copy;
+            document.getElementById('gitText').innerText = translation.gitText;
+        }
+
         function switchTab(os) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.code-panel').forEach(panel => panel.classList.remove('active'));
             
             if (os === 'mac') {
-                event.target.classList.add('active');
+                document.getElementById('tabMac').classList.add('active');
                 document.getElementById('code-mac').classList.add('active');
             } else {
-                event.target.classList.add('active');
+                document.getElementById('tabWin').classList.add('active');
                 document.getElementById('code-win').classList.add('active');
             }
         }
 
         function copyCode(id) {
             const codeText = document.getElementById(id).innerText;
+            const currentLang = document.documentElement.getAttribute('lang') || 'en';
+            const translation = translations[currentLang] || translations.en;
+            
             navigator.clipboard.writeText(codeText).then(() => {
                 const btn = event.target;
                 const originalText = btn.innerText;
-                btn.innerText = 'کپی شد!';
+                btn.innerText = translation.copied;
                 btn.style.background = 'var(--success-color)';
                 setTimeout(() => {
                     btn.innerText = originalText;
@@ -558,6 +742,17 @@ pwsh ./install-antigravity-patch-windows.ps1 -AuthOnly</pre>
                 }, 2000);
             });
         }
+
+        // Auto-detect browser language
+        window.addEventListener('DOMContentLoaded', () => {
+            const browserLang = navigator.language.slice(0, 2);
+            if (translations[browserLang]) {
+                document.getElementById('langSelect').value = browserLang;
+                changeLanguage(browserLang);
+            } else {
+                changeLanguage('en');
+            }
+        });
     </script>
 </body>
 </html>
