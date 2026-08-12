@@ -475,10 +475,18 @@
                     <span class="code-lang">macOS PowerShell (pwsh)</span>
                     <button class="copy-btn" onclick="copyCode('code-mac-text')">کپی دستور</button>
                 </div>
-                <pre id="code-mac-text"># کلون کردن و اجرای اسکریپت نصب در مک
-git clone https://github.com/kakajan/antigravity-patch.git
-cd antigravity-patch
-pwsh ./install-antigravity-patch.ps1</pre>
+                <pre id="code-mac-text"># کلون کردن ریپازیتوری پچ ترکیبی
+git clone https://github.com/m4tinbeigi-official/combined-antigravity-patcher.git
+cd combined-antigravity-patcher
+
+# ۱. اجرای کامل (هر دو پچ ورود و ریجن):
+pwsh ./install-antigravity-patch.ps1
+
+# ۲. اجرای اختصاصی پچ ریجن (فقط رفع محدودیت جغرافیایی):
+pwsh ./install-antigravity-patch.ps1 -RegionOnly
+
+# ۳. اجرای اختصاصی پچ ورود (فقط رفع خطای Authorization):
+pwsh ./install-antigravity-patch.ps1 -AuthOnly</pre>
             </div>
 
             <!-- Windows Code -->
@@ -487,9 +495,19 @@ pwsh ./install-antigravity-patch.ps1</pre>
                     <span class="code-lang">Windows PowerShell (Admin)</span>
                     <button class="copy-btn" onclick="copyCode('code-win-text')">کپی دستور</button>
                 </div>
-                <pre id="code-win-text"># اجرای اسکریپت نصب در ویندوز (ابتدا پاورشل را در حالت ادمین باز کنید)
+                <pre id="code-win-text"># ابتدا پاورشل را در حالت ادمین (Run as Administrator) باز کرده و دستورات زیر را اجرا کنید:
+git clone https://github.com/m4tinbeigi-official/combined-antigravity-patcher.git
+cd combined-antigravity-patcher
 Set-ExecutionPolicy Bypass -Scope Process -Force
-pwsh ./install-antigravity-patch-windows.ps1</pre>
+
+# ۱. اجرای کامل (هر دو پچ ورود و ریجن):
+pwsh ./install-antigravity-patch-windows.ps1
+
+# ۲. اجرای اختصاصی پچ ریجن (فقط رفع محدودیت جغرافیایی):
+pwsh ./install-antigravity-patch-windows.ps1 -RegionOnly
+
+# ۳. اجرای اختصاصی پچ ورود (فقط رفع خطای Authorization):
+pwsh ./install-antigravity-patch-windows.ps1 -AuthOnly</pre>
             </div>
         </section>
 

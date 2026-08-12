@@ -42,11 +42,19 @@
 ## 🚀 نحوه استفاده
 
 ### سیستم‌عامل macOS (مک)
-برای اجرای نصب پچ‌ها:
+برای اجرای پچ‌ها، ترمینال را باز کرده و یکی از حالت‌های زیر را اجرا کنید:
+
 ```powershell
-# اجرای اسکریپت نصب مخصوص مک
+# ۱. نصب کامل (هر دو پچ ورود و ریجن)
 pwsh ./install-antigravity-patch.ps1
+
+# ۲. فقط پچ ریجن (بایپس محدودیت جغرافیایی)
+pwsh ./install-antigravity-patch.ps1 -RegionOnly
+
+# ۳. فقط پچ احراز هویت (ورود/پروکسی)
+pwsh ./install-antigravity-patch.ps1 -AuthOnly
 ```
+
 برای لغو پچ‌ها و بازگردانی به حالت اول:
 ```powershell
 pwsh ./uninstall-antigravity-patch.ps1
@@ -54,14 +62,22 @@ pwsh ./uninstall-antigravity-patch.ps1
 
 ### سیستم‌عامل Windows (ویندوز)
 **مهم:** ابتدا PowerShell را در حالت **Run as Administrator** (اجرا به عنوان مدیر) باز کنید.
-سپس دستورات زیر را وارد کنید:
+سپس یکی از حالت‌های زیر را اجرا کنید:
+
 ```powershell
 # اجازه اجرای اسکریپت‌های محلی
 Set-ExecutionPolicy Bypass -Scope Process -Force
 
-# اجرای اسکریپت نصب مخصوص ویندوز
+# ۱. نصب کامل (هر دو پچ ورود و ریجن)
 pwsh ./install-antigravity-patch-windows.ps1
+
+# ۲. فقط پچ ریجن (بایپس محدودیت جغرافیایی)
+pwsh ./install-antigravity-patch-windows.ps1 -RegionOnly
+
+# ۳. فقط پچ احراز هویت (ورود/پروکسی)
+pwsh ./install-antigravity-patch-windows.ps1 -AuthOnly
 ```
+
 برای لغو پچ‌ها و بازگردانی به حالت اول در ویندوز:
 ```powershell
 pwsh ./uninstall-antigravity-patch-windows.ps1

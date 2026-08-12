@@ -5,8 +5,17 @@
 # Inspired by and based on:
 #   - https://github.com/kakajan/antigravity-patch       (Authorization fix)
 #   - https://github.com/AvenCores/open-antigravity-patcher (Region bypass)
-# Usage: pwsh ./install-antigravity-patch.ps1
+# Usage: 
+#   pwsh ./install-antigravity-patch.ps1               (Applies both patches)
+#   pwsh ./install-antigravity-patch.ps1 -RegionOnly   (Applies ONLY region bypass)
+#   pwsh ./install-antigravity-patch.ps1 -AuthOnly     (Applies ONLY auth/proxy fix)
 # ==============================================================================
+
+[CmdletBinding()]
+param(
+    [switch]$RegionOnly,
+    [switch]$AuthOnly
+)
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
@@ -14,7 +23,7 @@ $ErrorActionPreference = "Stop"
 function Write-Banner {
     Write-Host "" 
     Write-Host "  +======================================================+" -ForegroundColor Magenta
-    Write-Host "  |      Combined Antigravity Patcher  v1.0.0           |" -ForegroundColor Magenta
+    Write-Host "  |      Combined Antigravity Patcher  v1.1.0           |" -ForegroundColor Magenta
     Write-Host "  |   Authorization Fix + Region Restriction Bypass     |" -ForegroundColor Magenta
     Write-Host "  +------------------------------------------------------+" -ForegroundColor DarkMagenta
     Write-Host "  |  Inspired by:                                       |" -ForegroundColor DarkMagenta
@@ -110,7 +119,7 @@ function Backup-FileIfExists {
 
 function Apply-AuthPatch {
     param([string]$WorkDir, [string]$BackupDir, [string]$AGPath)
-    Write-Step "Patch 1/2 - antigravity-patch (Authorization Fix)"
+    Write-Step "[PATCH: Auth Fix] - antigravity-patch (Authorization/Proxy Fix)"
     Write-Info "Source: https://github.com/kakajan/antigravity-patch"
     $url = Get-LatestAssetUrl -Owner "kakajan" -Repo "antigravity-patch" -Pattern "*.dll"
     $dll = Join-Path $WorkDir "version.dll"
@@ -128,7 +137,7 @@ function Apply-AuthPatch {
 
 function Apply-RegionPatch {
     param([string]$WorkDir)
-    Write-Step "Patch 2/2 - open-antigravity-patcher (Region Bypass)"
+    Write-Step "[PATCH: Region Bypass] - open-antigravity-patcher (Region Bypass)"
     Write-Info "Source: https://github.com/AvenCores/open-antigravity-patcher"
     $url = Get-LatestAssetUrl -Owner "AvenCores" -Repo "open-antigravity-patcher" -Pattern "*.exe"
     $exe = Join-Path $WorkDir "Open.AG.Patcher.exe"
@@ -162,13 +171,25 @@ Write-Info "Work dir: $workDir"
 Write-Step "Locating Antigravity..."
 $agPath = Get-AGPath
 
-Apply-AuthPatch   -WorkDir $workDir -BackupDir $backupDir -AGPath $agPath
-Apply-RegionPatch -WorkDir $workDir
+# Determine which patches to apply based on switches
+if ($RegionOnly) {
+    Write-Info "Applying ONLY Region Bypass Patch."
+    Apply-RegionPatch -WorkDir $workDir
+}
+elseif ($AuthOnly) {
+    Write-Info "Applying ONLY Authorization/Proxy Fix Patch."
+    Apply-AuthPatch -WorkDir $workDir -BackupDir $backupDir -AGPath $agPath
+}
+else {
+    Write-Info "Applying BOTH Authorization and Region Patches."
+    Apply-AuthPatch   -WorkDir $workDir -BackupDir $backupDir -AGPath $agPath
+    Apply-RegionPatch -WorkDir $workDir
+}
 
 Remove-Item $workDir -Recurse -Force
 Write-Info "Cleaned up temp files."
 
 Write-Host ""
-Write-Host "  All patches applied! Restart Antigravity and sign in." -ForegroundColor Green
+Write-Host "  Patches applied successfully! Restart Antigravity." -ForegroundColor Green
 Write-Host "  To uninstall: pwsh ./uninstall-antigravity-patch.ps1" -ForegroundColor DarkGray
 Write-Host ""
