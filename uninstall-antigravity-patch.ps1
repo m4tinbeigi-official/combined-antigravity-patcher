@@ -1,88 +1,59 @@
-#!/usr/bin/env pwsh
-# ==============================================================================
-# uninstall-antigravity-patch.ps1 - Combined Antigravity Patcher (Uninstaller)
-# ==============================================================================
-# Restores all original files backed up by install-antigravity-patch.ps1
-# Usage: pwsh ./uninstall-antigravity-patch.ps1
-# ==============================================================================
+# ===========================================================================
+# uninstall-antigravity-patch.ps1 – Self‑contained remover for Combined Antigravity Patcher
+# ===========================================================================
+# This script restores any files that were backed up by the installer and removes
+# the downloaded patch files. It is completely independent – no external helper
+# scripts are required.
+# ===========================================================================
 
-Set-StrictMode -Version Latest
-$ErrorActionPreference = "Stop"
+# ------------------------------- Configuration ------------------------------
+$AntigravityPath = "$HOME/Library/Application Support/Antigravity" # macOS default
+# For Windows you could use: $Env:LOCALAPPDATA + "\\Antigravity"
+# ------------------------------------------------------------------------
 
-function Write-Step { param([string]$m); Write-Host "`n>> $m" -ForegroundColor Cyan }
-function Write-OK   { param([string]$m); Write-Host "  [OK] $m" -ForegroundColor Green }
-function Write-Warn { param([string]$m); Write-Host "  [!!] $m" -ForegroundColor Yellow }
-function Write-Fail { param([string]$m); Write-Host "  [XX] $m" -ForegroundColor Red }
-function Write-Info { param([string]$m); Write-Host "  [..] $m" -ForegroundColor DarkGray }
+function Write-Info { param([string]$Message) Write-Host "[INFO] $Message" -ForegroundColor Cyan }
+function Write-ErrorMsg { param([string]$Message) Write-Host "[ERROR] $Message" -ForegroundColor Red }
 
-Write-Host ""
-Write-Host "  +======================================================+" -ForegroundColor Yellow
-Write-Host "  |   Combined Antigravity Patcher - Uninstaller        |" -ForegroundColor Yellow
-Write-Host "  +======================================================+" -ForegroundColor Yellow
-Write-Host ""
-
-$backupDir = Join-Path $HOME ".antigravity_backups"
-
-if (-not (Test-Path $backupDir)) {
-    Write-Warn "No backup directory found at: $backupDir"
-    Write-Info "Nothing to restore. Patch may not have been applied."
-    exit 0
-}
-
-Write-Step "Locating Antigravity installation..."
-$candidates = @(
-    "/Applications/Antigravity.app/Contents/Resources",
-    "/Applications/Antigravity.app/Contents/MacOS",
-    "$HOME/Applications/Antigravity.app/Contents/Resources"
-)
-$agPath = $null
-foreach ($p in $candidates) {
-    if (Test-Path $p) { $agPath = $p; Write-OK "Found at: $p"; break }
-}
-if (-not $agPath) {
-    $agPath = Read-Host "  Enter Antigravity resources path (or press Enter to skip)"
-    if ([string]::IsNullOrWhiteSpace($agPath) -or -not (Test-Path $agPath)) {
-        Write-Warn "Skipping file restore - path not provided."
-        $agPath = $null
+function Restore-Backups {
+    Write-Info "Scanning for backup files in $AntigravityPath..."
+    $backups = Get-ChildItem -Path $AntigravityPath -Filter "*.bak_*" -File
+    if (-not $backups) {
+        Write-Info "No backup files found – nothing to restore."
+        return
     }
+    foreach ($bak in $backups) {
+        $original = $bak.FullName -replace "\\.bak_.*$", ""
+        Write-Info "Restoring $original from backup $($bak.Name)"
+        if (Test-Path $original) { Remove-Item -LiteralPath $original -Force }
+        Move-Item -LiteralPath $bak.FullName -Destination $original -Force
+    }
+    Write-Info "Restoration complete."
 }
 
-Write-Step "Restoring backed-up files..."
-$backups = Get-ChildItem -Path $backupDir -Filter "*.bak" -ErrorAction SilentlyContinue |
-           Sort-Object LastWriteTime -Descending
-
-if ($backups.Count -eq 0) {
-    Write-Warn "No backup files found in $backupDir"
-} else {
-    $restored = @{}
-    foreach ($bak in $backups) {
-        $orig = $bak.Name -replace "\.\d{8}_\d{6}\.bak$", ""
-        if ($restored.ContainsKey($orig)) { continue }
-        if ($agPath) {
-            $dest = Join-Path $agPath $orig
-            try {
-                Copy-Item $bak.FullName $dest -Force
-                Write-OK "Restored: $orig"
-                $restored[$orig] = $true
-            } catch {
-                Write-Fail "Failed to restore $orig : $_"
-            }
+function Remove-PatchFiles {
+    $files = @(
+        Join-Path $AntigravityPath "version.dll",
+        Join-Path $AntigravityPath "open-antigravity-patcher"
+    )
+    foreach ($f in $files) {
+        if (Test-Path $f) {
+            Write-Info "Removing patch file $f"
+            Remove-Item -LiteralPath $f -Force
         }
     }
-    if ($restored.Count -eq 0) {
-        Write-Warn "No files restored (Antigravity path not set or no matching files)."
-    }
 }
 
-Write-Step "Cleaning up..."
-$confirm = Read-Host "  Delete backup directory '$backupDir'? (y/N)"
-if ($confirm -eq "y" -or $confirm -eq "Y") {
-    Remove-Item $backupDir -Recurse -Force
-    Write-OK "Backup directory removed."
-} else {
-    Write-Info "Backup directory kept at: $backupDir"
+# ------------------------------------------------------------------------
+# Main execution
+# ------------------------------------------------------------------------
+if (-not (Test-Path $AntigravityPath)) {
+    Write-ErrorMsg "Antigravity directory not found at $AntigravityPath. Adjust the script if needed."
+    exit 1
 }
 
-Write-Host ""
-Write-Host "  Uninstall complete. Restart Antigravity." -ForegroundColor Green
-Write-Host ""
+Restore-Backups
+Remove-PatchFiles
+
+Write-Info "All patches have been removed and original files restored."
+Write-Host "You can now run Antigravity without the combined patches."
+# End of script
